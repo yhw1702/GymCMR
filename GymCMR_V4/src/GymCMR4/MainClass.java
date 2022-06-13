@@ -1,7 +1,7 @@
 package GymCMR4;
 
 /*
- * 230~240줄 부터 프로그램 페이지
+ * 230~240줄 부터 프로그램 페이
  */
 
 import javax.swing.JFrame;
@@ -15,6 +15,10 @@ import java.awt.Button;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import GymCMR4.member.MemberDao;
+import GymCMR4.program.ProgramDao;
+
 import javax.swing.Box;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -168,6 +172,14 @@ public class MainClass {
 				memberList.add(memberData);
 				displayMemberDetails();
 				memberID = memberID + 1;
+				
+				String name = memberNameInput.getText();
+				String phoneNum = phoneNumberInput.getText();
+				String apartDong = apartDongInput.getText();
+				String apartHo = apartHoInput.getText();
+				
+				MemberDao dao = new MemberDao();
+				int result = dao.insertMember(name,phoneNum,apartDong,apartHo);
 			}
 		});
 		
@@ -180,6 +192,14 @@ public class MainClass {
 				memberList.get(memberRow).apartDongInput = apartDongInput.getText();
 				memberList.get(memberRow).apartHoInput = apartHoInput.getText();
 				displayMemberDetails();
+				
+				String name = memberNameInput.getText();
+				String phoneNum = phoneNumberInput.getText();
+				String apartDong = apartDongInput.getText();
+				String apartHo = apartHoInput.getText();
+				
+				MemberDao dao = new MemberDao();
+				int result = dao.changeMember(name,phoneNum,apartDong,apartHo);
 			}
 		});
 		
@@ -192,6 +212,14 @@ public class MainClass {
 					membertbl.removeRow(memberRow);
 					memberList.remove(memberRow);
 					displayMemberDetails();
+					
+					String name = memberNameInput.getText();
+					String phoneNum = phoneNumberInput.getText();
+					String apartDong = apartDongInput.getText();
+					String apartHo = apartHoInput.getText();
+					
+					MemberDao dao = new MemberDao();
+					int result = dao.deleteMember(name,phoneNum,apartDong,apartHo);
 				}
 				
 			}
@@ -206,6 +234,8 @@ public class MainClass {
 				phoneNumberInput.setText("");
 				apartDongInput.setText("");
 				apartHoInput.setText("");
+				
+				
 			}
 		});
 		
@@ -310,6 +340,14 @@ public class MainClass {
 				
 				displayProgramDetails();
 				programID = programID + 1;
+				
+				String name = programNameInput.getText();
+				String week = programWeekInput.getText();
+				String time = programTimeInput.getText();
+				int maxMember = Integer.parseInt(maxMemberInput.getText());
+				
+				ProgramDao dao = new ProgramDao();
+				int result = dao.insertProgram(name,week,time,maxMember);
 			}
 		});
 		
@@ -322,6 +360,14 @@ public class MainClass {
 				programList.get(programRow).programTimeInput= programTimeInput.getText();
 				programList.get(programRow).maxMemberInput = Integer.parseInt(maxMemberInput.getText());
 				displayMemberDetails();
+				
+				String name = programNameInput.getText();
+				String week = programWeekInput.getText();
+				String time = programTimeInput.getText();
+				int maxMember = Integer.parseInt(maxMemberInput.getText());
+				
+				ProgramDao dao = new ProgramDao();
+				int result = dao.changeProgram(name,week,time,maxMember);
 			}
 		});
 		
@@ -334,6 +380,14 @@ public class MainClass {
 					programtbl.removeRow(programRow);
 					programList.remove(programRow);
 					displayMemberDetails();
+					
+					String name = programNameInput.getText();
+					String week = programWeekInput.getText();
+					String time = programTimeInput.getText();
+					int maxMember = Integer.parseInt(maxMemberInput.getText());
+					
+					ProgramDao dao = new ProgramDao();
+					int result = dao.deleteProgram(name,week,time,maxMember);
 				}
 				
 			}

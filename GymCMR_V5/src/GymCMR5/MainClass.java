@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 import GymCMR5.member.MemberDao;
 import GymCMR5.program.ProgramDao;
+import GymCMR5.regist.RegistDao;
 
 import javax.swing.Box;
 import javax.swing.JTable;
@@ -65,9 +66,17 @@ public class MainClass {
 	private TextField registSearchInput;
 	private JTable registTable;
 	
-	int memberRow, programRow;
+	private TextField registMemberName;
+	private TextField registProgramName;
+	private TextField registProgramWeek;
+	private TextField registProgramTime;
+	private TextField registMaxMember;
+	
+	
+	int memberRow, programRow, registRow;
 	int memberID = 1;
 	int programID = 1;
+	int registID = 1;
 	ArrayList<Member> memberList;
 	ArrayList<Member> memberList2;
 	ArrayList<Program> programList;
@@ -132,6 +141,19 @@ public class MainClass {
 					, programList.get(i).programTimeInput
 					, programList.get(i).maxMemberInput};
 			programtbl2.addRow(obj4);
+		}
+	}
+	
+	public void displayRegistDetails(){
+		registtbl.setRowCount(0);
+		for(int i=0; i< registList.size(); i++){
+			Object[] obj5={registList.get(i).registID
+					, registList.get(i).registMemberName
+					, registList.get(i).registProgramName
+					, registList.get(i).registProgramWeek
+					, registList.get(i).registProgramTime
+					, registList.get(i).registMaxMember};
+			registtbl.addRow(obj5);
 		}
 	}
 	
@@ -238,7 +260,7 @@ public class MainClass {
 					String apartHo = apartHoInput.getText();
 					
 					MemberDao dao = new MemberDao();
-					int result = dao.insertMember(name,phoneNum,apartDong,apartHo);
+					int result = dao.insertMember(name, phoneNum, apartDong, apartHo);
 			}
 		});
 		
@@ -260,7 +282,7 @@ public class MainClass {
 				String apartHo = apartHoInput.getText();
 				
 				MemberDao dao = new MemberDao();
-				int result = dao.changeMember(name,phoneNum,apartDong,apartHo);
+				int result = dao.changeMember(name, phoneNum, apartDong, apartHo);
 			}
 		});
 		
@@ -283,7 +305,7 @@ public class MainClass {
 					String apartHo = apartHoInput.getText();
 					
 					MemberDao dao = new MemberDao();
-					int result = dao.deleteMember(name,phoneNum,apartDong,apartHo);
+					int result = dao.deleteMember(name, phoneNum, apartDong, apartHo);
 				}
 				
 			}
@@ -405,13 +427,12 @@ public class MainClass {
 				displayProgramDetails();
 				displayProgramDetails2();
 				
-//				String name = programNameInput.getText();
-//				String week = programWeekInput.getText();
-//				String time = programTimeInput.getText();
-//				Integer maxMember = Integer.parseInt(maxMemberInput.getText());
-//				
-//				ProgramDao dao = new ProgramDao();
-//				int result = dao.insertProgram(name,week,time,maxMember);
+				String name = programNameInput.getText();
+				String week = programWeekInput.getText();
+				String time = programTimeInput.getText();
+				Integer maxMember = Integer.parseInt(maxMemberInput.getText());
+				ProgramDao dao = new ProgramDao();
+				int result = dao.insertProgram(name, week, time, maxMember);
 				
 			}
 		});
@@ -596,14 +617,79 @@ public class MainClass {
 		 
 		Button registBtnAdd = new Button("수강정보등록"); // 등록 버튼
 		regist_Modify_Btn.add(registBtnAdd);
+		registBtnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+					
+				Regist registData = new Regist(
+						registID,
+						memberNameInput2.getText(),
+						programNameInput2.getText(),
+						programWeekInput2.getText(),
+						programTimeInput2.getText(),
+						Integer.parseInt(maxMemberInput2.getText())
+						);
+					registList.add(registData);
+					registID = registID + 1;
+					displayRegistDetails();
+					
+						
+					String name = memberNameInput2.getText();
+					String program = programNameInput2.getText();
+					String week = programWeekInput2.getText();
+					String time = programTimeInput2.getText();
+					Integer maxmember = Integer.parseInt(maxMemberInput2.getText());
+					
+					RegistDao dao = new RegistDao();
+					int result1 = dao.insertRegist(name, program, week, time, maxmember);
+			}
+		});
 		
 		Button registBtnUpdate = new Button("수강정보수정"); // 수정 버튼
 		regist_Modify_Btn.add(registBtnUpdate);
+		registBtnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+					
+		registList.get(registRow).registMemberName = memberNameInput2.getText();
+		registList.get(registRow).registProgramName = programNameInput2.getText();
+		registList.get(registRow).registProgramWeek = programWeekInput2.getText();
+		registList.get(registRow).registProgramTime= programTimeInput2.getText();
+		registList.get(registRow).registMaxMember = Integer.parseInt(maxMemberInput2.getText());
+		displayRegistDetails();
+		
+		String name = memberNameInput2.getText();
+		String program = programNameInput2.getText();
+		String week = programWeekInput2.getText();
+		String time = programTimeInput2.getText();
+		int maxmember = Integer.parseInt(maxMemberInput2.getText());
+		
+		RegistDao dao = new RegistDao();
+		int result = dao.changeRegist(name,program,week,time,maxmember);
+			}
+		});
 		
 		Button registBtnDelete = new Button("수강정보삭제"); // 삭제 버튼
 		regist_Modify_Btn.add(registBtnDelete);
 		
-		
+		registBtnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int choice = JOptionPane.showConfirmDialog(null, "수강등록을 취소하시겠습니까?"
+						, "삭제", JOptionPane.YES_NO_OPTION);
+				if(choice==0){
+					registtbl.removeRow(registRow);
+					registList.remove(registRow);
+					displayRegistDetails();
+					String name = memberNameInput2.getText();
+					String program = programNameInput2.getText();
+					String week = programWeekInput2.getText();
+					String time = programTimeInput2.getText();
+					int maxmember = Integer.parseInt(maxMemberInput2.getText());
+					
+					RegistDao dao = new RegistDao();
+					int result = dao.deleteRegist(name,program,week,time,maxmember);
+				}
+				
+			}
+		});
 		// 여기부터 테이블 필드
 		JPanel mem_Pro_TableField = new JPanel();
 		mem_Pro_TopPage.add(mem_Pro_TableField);
@@ -648,7 +734,7 @@ public class MainClass {
 		Box programSearchGroup2 = Box.createHorizontalBox(); // 검색단을 묶는 그룹
 		mem_Pro_TableBox.add(programSearchGroup2);
 		
-		Label programNameSearch2 = new Label("이름"); // 검색단 이름
+		Label programNameSearch2 = new Label("프로그램명"); // 검색단 이름
 		programSearchGroup2.add(programNameSearch2);
 		programNameSearch2.setAlignment(Label.CENTER);
 		
@@ -705,7 +791,17 @@ public class MainClass {
 		
 		registTable = new JTable();
 		registScrollPane.setViewportView(registTable);
-		
+		registTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				registRow = registTable.getSelectedRow();
+				registMemberName.setText(registtbl.getValueAt(registRow, 1).toString());
+				registProgramName.setText(registtbl.getValueAt(registRow, 2).toString());
+				registProgramWeek.setText(registtbl.getValueAt(registRow, 3).toString());
+				registProgramTime.setText(registtbl.getValueAt(registRow, 3).toString());
+				registMaxMember.setText(registtbl.getValueAt(registRow, 4).toString());
+			}
+		});
 	}
 
 }
